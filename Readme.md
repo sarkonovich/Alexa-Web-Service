@@ -1,5 +1,5 @@
 The Alexa Web Service simply handles the JSON requests and responses that constitute an Alexa "Skill."
-For general information on create an Alexa skill as a web service, look here:
+For general information on creating an Alexa skill as a web service, look here:
 https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference#Introduction
 
 
@@ -31,7 +31,7 @@ Alexa will send your web service (aka your "skill") JSON in an HTTP POST request
 }
 ````
 
-The framework will automatically verify that the request comes from Amazon, and check the signature and timestamp of the request, as outlined [here]('https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/developing-an-alexa-skill-as-a-web-service') 
+The Alexa Web Service framework will automatically verify that the request comes from Amazon, and check the signature and timestamp of the request, as outlined [here]('https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/developing-an-alexa-skill-as-a-web-service') 
 
 It will also automatically create an instance of the AlexaRequest class just to provide some convenience methods for handling the JSON request:
 
@@ -60,7 +60,7 @@ end
 
 ####AlexaResponse:  Respond to user requests.####
 
-The AlexaResponse class provides the proper JSON to make Alexa responses.
+The AlexaResponse class generates the proper JSON to make Alexa responses.
 
 Create a new response object:
 
