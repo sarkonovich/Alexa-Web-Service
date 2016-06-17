@@ -1,0 +1,19 @@
+INTENT SCHEMA:
+
+
+{
+  "intents":[
+    {
+      "intent":"UserQuestion",
+      "slots":[]
+    }
+  ]
+}
+
+
+SAMPLE UTTERANCES:
+
+UserQuestion Is trouble coming
+UserQuestion Will I be rich
+UserQuestion Is my boss going to promote me
+UserQuestion Tell me whether my dreams will come true
