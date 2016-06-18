@@ -45,11 +45,15 @@ It will also automatically create an instance of the AlexaRequest class just to 
 @echo_request.session_new?
 ````
 
-Your skill works by providing Alexa with different responses depending on the the type/name/slot values of the request: 
+Your skill provides different responses depending on the the type/name/slot values of the request: 
 
 ````Ruby
 if @echo_request.launch_request
   # have alexa say hello
+elsif @echo_request.intent_name == "InformationRequest"
+  # ask use for what kind of information she wants
+elsif @echo_request.slots.time
+  # tell user the time
 end
 ````
 
@@ -58,7 +62,7 @@ end
 
 
 
-####AlexaResponse:  Respond to user requests.####
+####AlexaResponse:  Respond to Alexa requests.####
 
 The AlexaResponse class generates the proper JSON to make Alexa responses.
 
@@ -81,6 +85,13 @@ You can then send the response back to Alexa with the following command:
 response.without_card.to_json
 ````
 
+You can use [SSML](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/speech-synthesis-markup-language-ssml-reference):
+
+````Ruby
+response.speech_type = "SSML"
+response.text_type = "ssml"
+response.spoken_response = "<speak>Here is a word spelled out: <say-as interpret-as="spell-out">hello</say-as></speak>"
+````
 
 Alexa uses a "session attribute" to persist data within a session. (It's the empty "attributes" hash in the sample JSON request above.) The #add_attribute adds key:value pairs to that attributes hash.
 
