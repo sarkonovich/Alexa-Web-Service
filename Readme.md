@@ -31,7 +31,7 @@ Alexa will send your web service (aka your "skill") JSON in an HTTP POST request
 }
 ````
 
-The Alexa Web Service framework will automatically verify that the request comes from Amazon, and check the signature and timestamp of the request, as outlined [here]('https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/developing-an-alexa-skill-as-a-web-service') 
+The Alexa Web Service framework will automatically verify that the request comes from Amazon, and check the signature and timestamp of the request, as outlined [here](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/developing-an-alexa-skill-as-a-web-service) 
 
 It will also automatically create an instance of the AlexaRequest class just to provide some convenience methods for handling the JSON request:
 
@@ -45,7 +45,7 @@ It will also automatically create an instance of the AlexaRequest class just to 
 @echo_request.session_new?
 ````
 
-Your skill provides different responses depending on the the type/name/slot values of the request: 
+Your skill provides different responses (see next section) depending on the the type/name/slot values of the request: 
 
 ````Ruby
 if @echo_request.launch_request
@@ -84,6 +84,22 @@ You can then send the response back to Alexa with the following command:
 ````Ruby
 response.without_card.to_json
 ````
+
+So, putting the AlexaRequest and AlexaResponse together:
+
+````Ruby
+response = AlexaObjects::Response.new
+
+if @echo_request.launch_request
+  response.spoken_response = "Hello user"
+  response.end_session = true
+end
+
+response.without_card.to_json
+````
+  
+
+
 
 You can use [SSML](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/speech-synthesis-markup-language-ssml-reference):
 
