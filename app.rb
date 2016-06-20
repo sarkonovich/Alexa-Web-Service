@@ -28,6 +28,9 @@ module Sinatra
         @application_id = @echo_request.application_id
         
         # Necessary for skill certification:
+        # @url = request.env["HTTP_SIGNATURECERTCHAINURL"]
+        # @signature = request.env["HTTP_SIGNATURE"]
+        # @digest = OpenSSL::Digest::SHA1.new
         # verify_request
       end
     end
