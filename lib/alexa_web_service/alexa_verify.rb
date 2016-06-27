@@ -1,7 +1,12 @@
-require 'sinatra/base'
+module AlexaWebService
+	class AlexaVerify
 
-module Sinatra 
-	module AlexaVerify
+    def initialize(request_env, request_body)
+      @timestamp = JSON.parse(request_body)["request"]["timestamp"]
+      @url = request_env["HTTP_SIGNATURECERTCHAINURL"]
+      @signature = request_env["HTTP_SIGNATURE"]
+      @digest = OpenSSL::Digest::SHA1.new
+    end
 
 	  def valid_address?
 	    valid_address = /^https:\/\/s3.amazonaws.com(:443)?\/echo.api\/.*?$/
@@ -9,7 +14,7 @@ module Sinatra
 	  end
 
 	  def valid_timestamp?
-	    Time.now < DateTime.parse(@echo_request.timestamp).to_time + 150 rescue false
+	    Time.now < DateTime.parse(@timestamp).to_time + 150 rescue false
 	  end
 
 	  def valid_certificate?(certificate)
@@ -18,9 +23,9 @@ module Sinatra
 	    Time.now.utc < certificate.not_after
 	  end
 
-	  def get_certificate(url)
+	  def get_certificate
 	  	begin
-  			OpenSSL::X509::Certificate.new HTTParty.get(url)
+  			OpenSSL::X509::Certificate.new HTTParty.get(@url)
   		rescue TypeError
   			halt 400, "Bad Request"
   		rescue OpenSSL::SSL::SSLError
@@ -35,7 +40,7 @@ module Sinatra
     def verify_request
 
 	    if valid_address? && valid_timestamp?
-	    	@certificate = get_certificate(@url)
+	    	@certificate = get_certificate
 	    else
 	    	halt 400, "Bad Request"
 	    end
@@ -53,7 +58,6 @@ module Sinatra
 	    end
 	  end
 	end
- helpers AlexaVerify
 end
 
 

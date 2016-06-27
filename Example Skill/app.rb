@@ -1,7 +1,6 @@
 require 'sinatra/base'
 require 'json'
-require './alexa_objects'
-require './verify'
+require 'alexa_web_service'
 require './eight_ball'
 
 
@@ -11,7 +10,6 @@ module Sinatra
     
     set :protection, :except => [:json_csrf]
     register Sinatra::EightBall
-    helpers  Sinatra::AlexaVerify
     
     # You might need the following if you are implementing account linking.
     # helpers Sinatra::Cookies
@@ -23,17 +21,21 @@ module Sinatra
         content_type :json, 'charset' => 'utf-8'
         
         @data = request.body.read
+        begin
+          params.merge!(JSON.parse(@data))
+        rescue JSON::ParserError
+          halt 400, "Bad Request"
+        end
+        
         params.merge!(JSON.parse(@data))
-        @echo_request = AlexaObjects::AlexaRequest.new(JSON.parse(@data))
+        @echo_request = AlexaWebService::AlexaRequest.new(JSON.parse(@data))
         @application_id = @echo_request.application_id
         
-        # Necessary for skill certification:
-        # @url = request.env["HTTP_SIGNATURECERTCHAINURL"]
-        # @signature = request.env["HTTP_SIGNATURE"]
-        # @digest = OpenSSL::Digest::SHA1.new
-        # verify_request
+
+        # If the request body has been read, you need to rewind it.
+        request.body.rewind
+        AlexaWebService::AlexaVerify.new(request.env, request.body.read)
       end
     end
-    run!
   end
 end

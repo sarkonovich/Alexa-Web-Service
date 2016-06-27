@@ -1,10 +1,28 @@
-The Alexa Web Service simply handles the JSON requests and responses that constitute an Alexa "Skill."
+# AlexaWebService
+
+Framework for building an Alexa skill. 
+
+## Installation
+
+Add this line to your application's Gemfile:
+
+```ruby
+gem 'alexa_web_service'
+```
+
+And then execute:
+
+    $ bundle
+
+Or install it yourself as:
+
+    $ gem install alexa_web_service
+
+## Usage
+
+The Alexa Web Service gem handles the JSON requests and responses that constitute an Alexa "Skill."
 For general information on creating an Alexa skill as a web service, look here:
 https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference#Introduction
-
-
-
-####AlexaRequest: Verify and parse the request from Alexa.####
 
 Alexa will send your web service (aka your "skill") JSON in an HTTP POST request, like so:
 
@@ -14,7 +32,7 @@ Alexa will send your web service (aka your "skill") JSON in an HTTP POST request
     "sessionId": "SessionId.abc12d34-12ab-1abc-111-a12c3456d7ef9",
     "application": {
       "applicationId": "amzn1.echo-sdk-ams.app.xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-    },
+    },å
     "attributes": {},
     "user": {
       "userId": "amzn1.account.AHHLP1234ABC5DEFG6HIJK7XLMN"
@@ -31,17 +49,33 @@ Alexa will send your web service (aka your "skill") JSON in an HTTP POST request
 }
 ````
 
-The Alexa Web Service framework will automatically verify that the request comes from Amazon, and check the signature and timestamp of the request, as outlined [here](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/developing-an-alexa-skill-as-a-web-service) 
+####AlexaVerify: Verify the Alexa request####
 
-It will also automatically create an instance of the AlexaRequest class just to provide some convenience methods for handling the JSON request:
+The Alexa Web Service framework will automatically verify that the request comes from Amazon, as outlined [here](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/developing-an-alexa-skill-as-a-web-service)
+
+The AlexaVerify class takes two parameters: the request body sent by the client, and the raw environment hash.
+So if you're setting up a Sinatra server, you can verify the request like so:
 
 ````Ruby
-@echo_request.intent_name 
+# If the request body has been read, like in the Eight Ball example,
+# you need to rewind it.
+request.body.rewind
+
+# Verify the request.
+AlexaWebService::AlexaVerify.new(request.env, request.body.read)
+````
+
+####AlexaRequest: Handling the request from Alexa.####
+
+Create an instance of the AlexaRequest class to provide some convenience methods for handling the JSON request:
+
+````Ruby
+@echo_request.intent_name
 @echo_request.slots
 @echo_request.slots.myslot
-@echo_request.launch_request
-@echo_request.intent_request
-@echo_request.session_ended_request
+@echo_request.launch_request?
+@echo_request.intent_request?
+@echo_request.session_ended_request?
 @echo_request.session_new?
 ````
 
@@ -60,15 +94,13 @@ end
 (Take a look at eight_ball.rb for some further examples.)
 
 
-
-
 ####AlexaResponse:  Respond to Alexa requests.####
 
 The AlexaResponse class generates the proper JSON to make Alexa responses.
 
 Create a new response object:
 
-````response = AlexaObjects::Response.new````
+````response = AlexaWebService::Response.new````
 
 Then, define the response attributes:
 
@@ -88,7 +120,7 @@ response.without_card.to_json
 So, putting the AlexaRequest and AlexaResponse together:
 
 ````Ruby
-response = AlexaObjects::Response.new
+response = AlexaWebService::Response.new
 
 if @echo_request.launch_request
   response.spoken_response = "Hello user"
@@ -138,3 +170,12 @@ response.link_card.to_json
 
 
 
+
+
+## Contributing
+
+1. Fork it ( https://github.com/[my-github-username]/alexa_web_service/fork )
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create a new Pull Request

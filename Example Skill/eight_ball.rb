@@ -1,11 +1,9 @@
 require 'sinatra/base'
-require './alexa_objects'
 
 ANSWER = ["absolutely!", "I doubt it", "If you want it badly enough",  "yes, the stars are aligned for you", "the future is uncertain", "no chance", "you control your own destiny"]
 
 module Sinatra
   module EightBall
-    include AlexaObjects
     def self.registered(app)
       app.post '/magic' do
         
@@ -14,7 +12,7 @@ module Sinatra
         # Uncomment this and include your skill id before submitting application for certification:
         # halt 400, "Invalid Application ID" unless @application_id == "your-skill-id"      
         
-        r = AlexaObjects::Response.new
+        r = AlexaWebService::Response.new
 
         if @echo_request.launch_request?
           r.end_session = false
