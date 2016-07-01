@@ -70,6 +70,8 @@ AlexaWebService::AlexaVerify.new(request.env, request.body.read)
 Create an instance of the AlexaRequest class to provide some convenience methods for handling the JSON request:
 
 ````Ruby
+@echo_request = AlexaWebService::AlexaRequest.new(request_json)
+
 @echo_request.intent_name
 @echo_request.slots
 @echo_request.slots.myslot
