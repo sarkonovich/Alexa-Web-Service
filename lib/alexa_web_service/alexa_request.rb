@@ -27,7 +27,7 @@ module AlexaWebService
   	end
 
 		def filled_slots
-			@slots.select { |slot| slot != nil}
+			@slots.select { |slot| slot != nil} rescue []
 		end
 
 		def intent_request?
