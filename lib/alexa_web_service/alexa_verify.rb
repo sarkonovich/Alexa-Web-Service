@@ -2,6 +2,7 @@ module AlexaWebService
 	class AlexaVerify
 
     def initialize(request_env, request_body)
+      @request_body = request_body
       @timestamp = JSON.parse(request_body)["request"]["timestamp"]
       @url = request_env["HTTP_SIGNATURECERTCHAINURL"]
       @signature = request_env["HTTP_SIGNATURE"]
@@ -34,7 +35,7 @@ module AlexaWebService
   	end
 
 	  def check_signature(certificate)
-      certificate.public_key.verify(@digest, Base64.decode64(@signature), @data) rescue false
+      certificate.public_key.verify(@digest, Base64.decode64(@signature), @request_body) rescue false
     end
 
     def verify_request
