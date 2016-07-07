@@ -27,9 +27,9 @@ module AlexaWebService
 	  	begin
   			OpenSSL::X509::Certificate.new HTTParty.get(@url)
   		rescue TypeError
-  			halt 400, "Bad Request"
+  			"Bad Request"
   		rescue OpenSSL::SSL::SSLError
-  			halt 400, "Bad Request"
+  			"Bad Request"
   		end
   	end
 
@@ -42,19 +42,19 @@ module AlexaWebService
 	    if valid_address? && valid_timestamp?
 	    	@certificate = get_certificate
 	    else
-	    	halt 400, "Bad Request"
+	    	"Bad Request"
 	    end
 
 	    if valid_certificate?(@certificate)
 	    	@verify = check_signature(@certificate)
 	    else
-	    	halt 400, "Invalid Certificate"
+	    	"Invalid Certificate"
 	    end
 
 	    if @verify
-	    	status 200
+	    	"OK"
 	    else
-	    	halt 400, "Invalid Signature"
+	    	"Invalid Signature"
 	    end
 	  end
 	end

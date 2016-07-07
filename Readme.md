@@ -62,7 +62,8 @@ So if you're setting up a Sinatra server, you can verify the request like so:
 request.body.rewind
 
 # Verify the request.
-AlexaWebService::AlexaVerify.new(request.env, request.body.read)
+verified = AlexaWebService::AlexaVerify.new(request.env, request.body.read).verify_request
+halt 400, "#{verified}" unless verified == "OK"
 ````
 
 ####AlexaRequest: Handling the request from Alexa.####
