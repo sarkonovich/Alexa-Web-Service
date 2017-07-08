@@ -1,6 +1,5 @@
 require_relative './show_response.rb'
 module AlexaWebService
-<<<<<<< HEAD
 	class Response < ShowResponse
     attr_accessor :session_attributes, :spoken_response, :card_title, :card_content, :reprompt_text, :end_session, :speech_type, :text_type, :directives
     def initialize (session_attributes: {}, spoken_response: nil, card_title: nil, card_content: nil, reprompt_text: nil, speech_type: "PlainText", text_type: "text", end_session: nil, directives: [])
@@ -13,20 +12,6 @@ module AlexaWebService
       @text_type = text_type
       @end_session = end_session
       @directives = directives
-=======
-	class Response
-		attr_accessor :session_attributes, :spoken_response, :ssml_response, :card_title, :card_content, :reprompt_text, :end_session, :speech_type, :text_type
-		def initialize(params={})
-      @session_attributes = params[:session_attributes] || {}
-      @speech_type = params[:speech_type] || "PlainText"
-      @spoken_response = params[:spoken_response] || nil
-			@ssml_response = params[:ssml_response] || nil
-      @card_title = params[:card_title] || nil
-      @card_content = params[:card_content] || nil
-      @reprompt_text = params[:reprompt_text] || nil
-      @text_type = params[:text_type] || "text"
-      @end_session = params[:end_session] || true
->>>>>>> origin/master
     end
 
     def add_attribute(key, value)
