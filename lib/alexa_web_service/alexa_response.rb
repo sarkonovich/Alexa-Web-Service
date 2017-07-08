@@ -1,4 +1,19 @@
+require_relative './show_response.rb'
 module AlexaWebService
+<<<<<<< HEAD
+	class Response < ShowResponse
+    attr_accessor :session_attributes, :spoken_response, :card_title, :card_content, :reprompt_text, :end_session, :speech_type, :text_type, :directives
+    def initialize (session_attributes: {}, spoken_response: nil, card_title: nil, card_content: nil, reprompt_text: nil, speech_type: "PlainText", text_type: "text", end_session: nil, directives: [])
+      @session_attributes = session_attributes
+      @speech_type = speech_type
+      @spoken_response = spoken_response
+      @card_title = card_title
+      @card_content = card_content
+      @reprompt_text = reprompt_text
+      @text_type = text_type
+      @end_session = end_session
+      @directives = directives
+=======
 	class Response
 		attr_accessor :session_attributes, :spoken_response, :ssml_response, :card_title, :card_content, :reprompt_text, :end_session, :speech_type, :text_type
 		def initialize(params={})
@@ -11,14 +26,39 @@ module AlexaWebService
       @reprompt_text = params[:reprompt_text] || nil
       @text_type = params[:text_type] || "text"
       @end_session = params[:end_session] || true
+>>>>>>> origin/master
     end
 
-		def add_attribute(key, value)
-			@session_attributes.merge!(key => value)
-		end
+    def add_attribute(key, value)
+      @session_attributes.merge!(key => value)
+    end
 
-		def append_attribute(key, value)
-			@session_attributes[key] << value if @session_attributes[key] != nil
+    def append_attribute(key, value)
+      @session_attributes[key] << value if @session_attributes[key] != nil
+    end
+
+    def add_show_template(type: "BodyTemplate1", token: "", back_button: "VISIBLE", background_image: {}, title: "", image: {})
+      self.directives = ShowResponse.new(
+        type: type, 
+        token: token,  
+        back_button: back_button, 
+        background_image: background_image,
+        title: title,
+        image: image).directives
+    end
+
+		def parse_output_speech(reprompt = false)
+			if !ssml_response
+				{
+					"type" => speech_type,
+					"text" => reprompt ? reprompt_text : spoken_response
+				}
+			else
+				{
+					"type" => "SSML",
+					"ssml" => ssml_response
+				}
+			end
 		end
 
 		def parse_output_speech(reprompt = false)
