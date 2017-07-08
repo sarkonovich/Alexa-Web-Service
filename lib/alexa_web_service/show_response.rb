@@ -1,4 +1,4 @@
-# module AlexaWebService
+module AlexaWebService
   class ShowResponse
     attr_accessor :directives
 
@@ -102,4 +102,4 @@
       }
     end
   end
-# end
+end
