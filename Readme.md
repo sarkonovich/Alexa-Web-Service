@@ -18,13 +18,13 @@ Or install it yourself as:
 
     $ gem install alexa_web_service
 
-## Usage
+## Usage ##
 
 The Alexa Web Service gem handles the JSON requests and responses that constitute an Alexa "Skill."
 For general information on creating an Alexa skill as a web service, look here:
 https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference#Introduction
 
-Alexa will send your web service (aka your "skill") JSON in an HTTP POST request, like so:
+Alexa will send your web service JSON in an HTTP POST request, like so:
 
 ````Ruby
 {
@@ -32,7 +32,7 @@ Alexa will send your web service (aka your "skill") JSON in an HTTP POST request
     "sessionId": "SessionId.abc12d34-12ab-1abc-111-a12c3456d7ef9",
     "application": {
       "applicationId": "amzn1.echo-sdk-ams.app.xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-    },å
+    },
     "attributes": {},
     "user": {
       "userId": "amzn1.account.AHHLP1234ABC5DEFG6HIJK7XLMN"
@@ -49,7 +49,7 @@ Alexa will send your web service (aka your "skill") JSON in an HTTP POST request
 }
 ````
 
-####AlexaVerify: Verify the Alexa request####
+#### Verify: Verify the Alexa request ####
 
 The Alexa Web Service framework will automatically verify that the request comes from Amazon, as outlined [here](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/developing-an-alexa-skill-as-a-web-service)
 
@@ -62,16 +62,16 @@ So if you're setting up a Sinatra server, you can verify the request like so:
 request.body.rewind
 
 # Verify the request.
-verified = AlexaWebService::AlexaVerify.new(request.env, request.body.read).verify_request
+verified = AlexaWebService::Verify.new(request.env, request.body.read).verify_request
 halt 400, "#{verified}" unless verified == "OK"
 ````
 
-####AlexaRequest: Handling the request from Alexa.####
+#### Request: Handling the request from Alexa ####
 
 Create an instance of the AlexaRequest class to provide some convenience methods for handling the JSON request:
 
 ````Ruby
-@echo_request = AlexaWebService::AlexaRequest.new(request_json)
+@echo_request = AlexaWebService::Request.new(request_json)
 
 @echo_request.intent_name
 @echo_request.slots
@@ -97,7 +97,7 @@ end
 (Take a look at eight_ball.rb for some further examples.)
 
 
-####AlexaResponse:  Respond to Alexa requests.####
+#### Response: Respond to Alexa requests ####
 
 The AlexaResponse class generates the proper JSON to make Alexa responses.
 
@@ -132,10 +132,7 @@ end
 
 response.without_card.to_json
 ````
-  
-
-
-
+ 
 You can use [SSML](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/speech-synthesis-markup-language-ssml-reference):
 
 ````Ruby
@@ -146,24 +143,70 @@ response.spoken_response = "<speak>Here is a word spelled out: <say-as interpret
 
 Alexa uses a "session attribute" to persist data within a session. (It's the empty "attributes" hash in the sample JSON request above.) The #add_attribute adds key:value pairs to that attributes hash.
 
-
-
 ````Ruby
 response.add_attribute("favorite_color", "blue" )
 ````
+### Adding a  Directive ###
+AlexaWebService supports directives: [hint and display directives](https://developer.amazon.com/docs/custom-skills/display-interface-reference.html) (for Alexa devices with screens), and [progresssive response](https://developer.amazon.com/docs/custom-skills/send-the-user-a-progressive-response.html). They work a little differently. 
 
-You can also send text card to the Alexa app:
+*Display Directive*
+Please see the Amazon docs. Display Directives are a bit involved.
+First, create the directive:
+````ruby
+display = AlexaWebService::DisplayDirective.new(
+  type: "Body Template Type", token: "Your Token", title: "Your Title"
+  )
+display.add_text(primary_text: "first text", secondary_text: "second_text", tertiary_text: "third text")
+display.add_background_image("title", url)
+display.add__image("title", url)
+````
+then, add it to your response:
+````
+response.add_directive(display.directive)
+````
+*Hint Directive*
+````
+hint = AlexaWebService::HintDirective.new("Buy low, sell high!")
+response.add_directive(hint.directive)
+````
+*Progressive Response*
+These are a bit different than other directives. They are not sent with your response, but are sent before. They take two parameters, the entire request object, and the text you'd like Alexa to speak.
+````
+progressive_response = AlexaWebService::ProgressiveResponse.new(request, "Hang on, looking up information.")
+````
+Then send it....
+````
+progressive_response.post
+````
 
+
+### Sending a Card ###
+
+You can also [send a card](https://developer.amazon.com/docs/custom-skills/include-a-card-in-your-skills-response.html) to the Alexa app:
+AlexaWebService supports four kinds of cards:
+- Plain Text
+- Image
+- Linking
+- Permissions
+
+Here's how you'd add an image card to your response: 
 ````Ruby
 response.card_title = "My Alexa Card"
 response.card_content "Formating is really limited to: \nline breaks"
+response.card_small_image = "https://your_small_image_url.jpg"
+response.card_large_image = "https://your_large_image_url.jpg"
 ````
 
-When sending a card along with the spoken response use:
+When sending a plain text card along with the spoken response use:
 
 ````
 response.with_card.to_json
 ````
+or, if you want to include an image:
+````
+response.with_image_card.to_json
+````
+
 
 If you create a skill that uses [account linking](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/linking-an-alexa-user-with-a-user-in-your-system), you'll need to send a linking card:
 
@@ -182,3 +225,4 @@ response.link_card.to_json
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
+

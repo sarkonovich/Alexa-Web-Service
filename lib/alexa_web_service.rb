@@ -1,7 +1,9 @@
-require 'alexa_web_service/version'
-require 'alexa_web_service/alexa_response'
-require 'alexa_web_service/alexa_request'
-require 'alexa_web_service/alexa_verify'
+require 'alexa_web_service/display_directive'
+require 'alexa_web_service/hint_directive'
+require 'alexa_web_service/progressive_response'
+require 'alexa_web_service/request'
+require 'alexa_web_service/response'
+require 'alexa_web_service/verify'
 
 module AlexaWebService
 end

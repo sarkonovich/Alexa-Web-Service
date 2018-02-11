@@ -1,3 +1,2 @@
 require "bundler/gem_tasks"
-require 'iconv' 
-
+task :default => :spec

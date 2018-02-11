@@ -1,5 +1,5 @@
 module AlexaWebService
-	class AlexaVerify
+	class Verify
 
     def initialize(request_env, request_body)
       @request_body = request_body

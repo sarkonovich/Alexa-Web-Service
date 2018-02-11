@@ -1,11 +1,8 @@
 require 'sinatra/base'
-require 'json'
 require 'alexa_web_service'
 require './eight_ball'
 
-
-
-module Sinatra
+# module Sinatra
   class MyApp < Sinatra::Base
     
     set :protection, :except => [:json_csrf]
@@ -28,14 +25,17 @@ module Sinatra
         end
         
         params.merge!(JSON.parse(@data))
-        @echo_request = AlexaWebService::AlexaRequest.new(JSON.parse(@data))
+        @echo_request = AlexaWebService::Request.new(JSON.parse(@data))
+        $display_support = JSON.parse(@data)["context"]["System"]["device"]["supportedInterfaces"]["Display"].any? rescue false
         @application_id = @echo_request.application_id
         
 
         # If the request body has been read, you need to rewind it.
         request.body.rewind
-        AlexaWebService::AlexaVerify.new(request.env, request.body.read)
+        AlexaWebService::Verify.new(request.env, request.body.read)
       end
     end
+    run!
   end
-end
+
+# end
