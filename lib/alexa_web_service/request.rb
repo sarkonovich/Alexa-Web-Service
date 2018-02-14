@@ -1,30 +1,26 @@
 module AlexaWebService
   class Request
-    attr_reader :intent_name, :slots, :timestamp, :request_type, :session_new, :user_id, :access_token, :application_id, :request_id, :api_access_token, :api_endpoint, :device_id, :response_hash
+    attr_reader :response_hash, :api_access_token, :api_endpoint, :device_id, 
+                :request_id, :request_type, :timestamp, :session_new, :user_id,
+                :access_token, :application_id, :intent_name, :slots
+    
     attr_accessor :attributes
-    alias :session_new? :session_new
 
     def initialize(response_hash)
-      if response_hash["session"]["attributes"]
-        @attributes   = response_hash["session"]["attributes"]
-      else
-        @attributes   = {}
-      end
-      @response_hash = response_hash
+      @response_hash    = response_hash
       @api_access_token = response_hash["context"]["System"]["apiAccessToken"]
-      @api_endpoint = response_hash["context"]["System"]["apiEndpoint"]
-      @device_id = response_hash["context"]["System"]["device"]["deviceId"]
-      @request_id = response_hash["request"]["requestId"]
+      @api_endpoint     = response_hash["context"]["System"]["apiEndpoint"]
+      @device_id        = response_hash["context"]["System"]["device"]["deviceId"]
+      @request_id       = response_hash["request"]["requestId"]
       @request_type     = response_hash["request"]["type"]
-      @timestamp      = response_hash["request"]["timestamp"]
-      @session_new    = response_hash["session"]["new"]
-      @user_id      = response_hash["session"]["user"]["userId"]
-      @access_token   = response_hash["session"]["user"]["accessToken"]
+      @timestamp        = response_hash["request"]["timestamp"]
+      @session_new      = response_hash["session"]["new"]
+      @user_id          = response_hash["session"]["user"]["userId"]
+      @access_token     = response_hash["session"]["user"]["accessToken"]
       @application_id   = response_hash["session"]["application"]["applicationId"]
-      if response_hash["request"]["intent"]
-        @intent_name  =  response_hash["request"]["intent"]["name"]
-        @slots      = build_struct(response_hash["request"]["intent"]["slots"])
-      end
+      @intent_name      = get_intent_name
+      @slots            = get_slots
+      @attributes       = get_attributes
     end
 
     def filled_slots
@@ -49,7 +45,28 @@ module AlexaWebService
       request_type == "SessionEndedRequest"
     end
 
-    private 
+    def session_new?
+      session_new
+    end 
+
+    
+    private
+    def get_intent_name
+      if response_hash["request"]["intent"]
+        response_hash["request"]["intent"]["name"]
+      end
+    end
+
+    def get_slots
+      if response_hash["request"]["intent"]
+        build_struct(response_hash["request"]["intent"]["slots"])
+      end
+    end
+
+    def get_attributes
+      response_hash["session"]["attributes"] ? response_hash["session"]["attributes"] : {} 
+    end
+
     def build_struct(hash)
       if hash.nil? || hash.empty?
         nil

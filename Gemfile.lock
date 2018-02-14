@@ -1,16 +1,30 @@
 PATH
   remote: .
   specs:
-    alexa_web_service (0.0.9)
+    alexa_web_service (1.0.0)
 
 GEM
   remote: https://rubygems.org/
   specs:
+    diff-lcs (1.2.5)
     httparty (0.15.7)
       multi_xml (>= 0.5.2)
     json (2.1.0)
     multi_xml (0.6.0)
     rake (10.5.0)
+    rspec (3.5.0)
+      rspec-core (~> 3.5.0)
+      rspec-expectations (~> 3.5.0)
+      rspec-mocks (~> 3.5.0)
+    rspec-core (3.5.2)
+      rspec-support (~> 3.5.0)
+    rspec-expectations (3.5.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.5.0)
+    rspec-mocks (3.5.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.5.0)
+    rspec-support (3.5.0)
 
 PLATFORMS
   ruby
@@ -21,6 +35,7 @@ DEPENDENCIES
   httparty (~> 0.15.7)
   json (~> 2.1, >= 2.1.0)
   rake (~> 10.0)
+  rspec (~> 3.0)
 
 BUNDLED WITH
    1.16.1

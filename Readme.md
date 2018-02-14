@@ -189,33 +189,40 @@ AlexaWebService supports four kinds of cards:
 - Linking
 - Permissions
 
-Here's how you'd add an image card to your response: 
+First, create a card: 
+````
+card = AlexaWebService::Card.new
+````
+
+Then add the card attributes you want (text, image, or permissions if sending a permissions card):
 ````Ruby
-response.card_title = "My Alexa Card"
-response.card_content "Formating is really limited to: \nline breaks"
-response.card_small_image = "https://your_small_image_url.jpg"
-response.card_large_image = "https://your_large_image_url.jpg"
+card.title = "My Alexa Card"
+card.content "Formating is really limited to: \nline breaks"
+card.small_image = "https://your_small_image_url.jpg"
+card.large_image = "https://your_large_image_url.jpg"
 ````
+Finally, add the card to your response, specifying the kind of card you created:
+````
+response.add_card(card.with_image)
+````
+other possibilities:
+````
+# text only
+response.add_card(card.with_text)    
 
-When sending a plain text card along with the spoken response use:
+# permissions
+response.add_card(card.with_permissions)
+````
+If you create a skill that uses [account linking](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/linking-an-alexa-user-with-a-user-in-your-system)
+````
+# linking
+response.add_card(card.linking)
+````
+Finally, post your response
 
 ````
-response.with_card.to_json
+response.post
 ````
-or, if you want to include an image:
-````
-response.with_image_card.to_json
-````
-
-
-If you create a skill that uses [account linking](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/linking-an-alexa-user-with-a-user-in-your-system), you'll need to send a linking card:
-
-````
-response.link_card.to_json
-````
-
-
-
 
 
 ## Contributing
