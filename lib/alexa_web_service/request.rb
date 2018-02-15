@@ -1,23 +1,23 @@
 module AlexaWebService
   class Request
-    attr_reader :response_hash, :api_access_token, :api_endpoint, :device_id, 
+    attr_reader :request_hash, :api_access_token, :api_endpoint, :device_id, 
                 :request_id, :request_type, :timestamp, :session_new, :user_id,
                 :access_token, :application_id, :intent_name, :slots
     
     attr_accessor :attributes
 
-    def initialize(response_hash)
-      @response_hash    = response_hash
-      @api_access_token = response_hash["context"]["System"]["apiAccessToken"]
-      @api_endpoint     = response_hash["context"]["System"]["apiEndpoint"]
-      @device_id        = response_hash["context"]["System"]["device"]["deviceId"]
-      @request_id       = response_hash["request"]["requestId"]
-      @request_type     = response_hash["request"]["type"]
-      @timestamp        = response_hash["request"]["timestamp"]
-      @session_new      = response_hash["session"]["new"]
-      @user_id          = response_hash["session"]["user"]["userId"]
-      @access_token     = response_hash["session"]["user"]["accessToken"]
-      @application_id   = response_hash["session"]["application"]["applicationId"]
+    def initialize(request_hash)
+      @request_hash     = request_hash
+      @api_access_token = request_hash["context"]["System"]["apiAccessToken"]
+      @api_endpoint     = request_hash["context"]["System"]["apiEndpoint"]
+      @device_id        = request_hash["context"]["System"]["device"]["deviceId"]
+      @request_id       = request_hash["request"]["requestId"]
+      @request_type     = request_hash["request"]["type"]
+      @timestamp        = request_hash["request"]["timestamp"]
+      @session_new      = request_hash["session"]["new"]
+      @user_id          = request_hash["session"]["user"]["userId"]
+      @access_token     = request_hash["session"]["user"]["accessToken"]
+      @application_id   = request_hash["session"]["application"]["applicationId"]
       @intent_name      = get_intent_name
       @slots            = get_slots
       @attributes       = get_attributes
@@ -36,8 +36,8 @@ module AlexaWebService
     end
 
     def slot_hash
-      if response_hash["request"]["intent"]
-        response_hash["request"]["intent"]["slots"]
+      if request_hash["request"]["intent"]
+        request_hash["request"]["intent"]["slots"]
       end
     end
 
@@ -52,19 +52,19 @@ module AlexaWebService
     
     private
     def get_intent_name
-      if response_hash["request"]["intent"]
-        response_hash["request"]["intent"]["name"]
+      if request_hash["request"]["intent"]
+        request_hash["request"]["intent"]["name"]
       end
     end
 
     def get_slots
-      if response_hash["request"]["intent"]
-        build_struct(response_hash["request"]["intent"]["slots"])
+      if request_hash["request"]["intent"]
+        build_struct(request_hash["request"]["intent"]["slots"])
       end
     end
 
     def get_attributes
-      response_hash["session"]["attributes"] ? response_hash["session"]["attributes"] : {} 
+      request_hash["session"]["attributes"] ? request_hash["session"]["attributes"] : {} 
     end
 
     def build_struct(hash)
