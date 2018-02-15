@@ -113,25 +113,7 @@ response.spoken_response = "This is what Alexa will say to you"
 response.reprompt_text = "This is what she'll say if she doesn't hear your response the first time."
 ````
 
-You can then send the response back to Alexa with the following command:
 
-
-````Ruby
-response.without_card.to_json
-````
-
-So, putting the AlexaRequest and AlexaResponse together:
-
-````Ruby
-response = AlexaWebService::Response.new
-
-if @echo_request.launch_request
-  response.spoken_response = "Hello user"
-  response.end_session = true
-end
-
-response.without_card.to_json
-````
  
 You can use [SSML](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/speech-synthesis-markup-language-ssml-reference):
 
