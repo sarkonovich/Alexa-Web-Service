@@ -79,6 +79,36 @@ RSpec.describe AlexaWebService::Card do
     end
   end
 
+  describe '#large_image' do
+    it 'adds a large image to an existing card' do
+      expected_result = {
+        type: "Standard", 
+        title: "", 
+        text: "", 
+        image: { 
+          smallImageUrl: nil,
+          largeImageUrl: "https://image_url"
+        }
+      }
+
+      card = described_class.new
+      card.large_image = "https://image_url"
+      expect(card.with_image).to eq expected_result
+    end
+  end
+
+  describe '#with_permission' do
+    it 'generates a permissions card' do
+      expected_result = {
+      "type": "AskForPermissionsConsent", "permissions": ["read::alexa:device:all:address"]
+      }
+
+      card = described_class.new
+      card.add_permission("read::alexa:device:all:address")
+      expect(card.with_permission).to eq expected_result
+    end
+  end
+
   describe '#linking' do
     it 'generates a LinkAccount card' do
       expected_result = {

@@ -53,45 +53,39 @@ RSpec.describe AlexaWebService::Response do
     expect(response.post).to eq expected_response
   end
 
+  it 'can return a card with the response' do
+    expected_response = {"version"=>"1.0",
+     "sessionAttributes"=>{},
+     "response"=>
+      {"outputSpeech"=>{"type"=>"PlainText", "text"=>"Hello World!"},
+       "card"=>{"type"=>"Simple", "title"=>"Card Title", "content"=>"Card Content"},
+       "reprompt"=>{"outputSpeech"=>{"type"=>"PlainText", "text"=>""}},
+       "directives"=>[],
+       "shouldEndSession"=>"true"}}.to_json
 
-
-  describe '#add_card' do
-    it 'can return a card with the response' do
-      expected_response = {"version"=>"1.0",
-       "sessionAttributes"=>{},
-       "response"=>
-        {"outputSpeech"=>{"type"=>"PlainText", "text"=>"Hello World!"},
-         "card"=>{"type"=>"Simple", "title"=>"Card Title", "content"=>"Card Content"},
-         "reprompt"=>{"outputSpeech"=>{"type"=>"PlainText", "text"=>""}},
-         "directives"=>[],
-         "shouldEndSession"=>"true"}}.to_json
-
-      response = described_class.new
-      card = AlexaWebService::Card.new
-      card.title = "Card Title"
-      card.content = "Card Content"
-      response.add_card(card.with_text)
-      response.spoken_response = "Hello World!"
-      expect(response.post).to eq expected_response
-    end
+    response = described_class.new
+    card = AlexaWebService::Card.new
+    card.title = "Card Title"
+    card.content = "Card Content"
+    response.add_card(card.with_text)
+    response.spoken_response = "Hello World!"
+    expect(response.post).to eq expected_response
   end
 
-  describe '#add_attribute' do
-    it 'can return a session attribute with the response' do
-      expected_response = {"version"=>"1.0",
-       "sessionAttributes"=>{"session_attribute"=>"string"},
-       "response"=>
-        {"outputSpeech"=>{"type"=>"PlainText", "text"=>"Hello World!"},
-         "card"=>nil,
-         "reprompt"=>{"outputSpeech"=>{"type"=>"PlainText", "text"=>""}},
-         "directives"=>[],
-         "shouldEndSession"=>"true"}}.to_json
+  it 'can return a session attribute with the response' do
+    expected_response = {"version"=>"1.0",
+     "sessionAttributes"=>{"session_attribute"=>"string"},
+     "response"=>
+      {"outputSpeech"=>{"type"=>"PlainText", "text"=>"Hello World!"},
+       "card"=>nil,
+       "reprompt"=>{"outputSpeech"=>{"type"=>"PlainText", "text"=>""}},
+       "directives"=>[],
+       "shouldEndSession"=>"true"}}.to_json
 
-      response = described_class.new
-      response.add_attribute("session_attribute", "string")
-      response.spoken_response = "Hello World!"
-      expect(response.post).to eq expected_response
-    end
+    response = described_class.new
+    response.add_attribute("session_attribute", "string")
+    response.spoken_response = "Hello World!"
+    expect(response.post).to eq expected_response
   end
 
   describe '#add_directive' do
