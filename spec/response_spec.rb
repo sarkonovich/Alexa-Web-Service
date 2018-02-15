@@ -13,7 +13,7 @@ RSpec.describe AlexaWebService::Response do
        "card"=>nil,
        "reprompt"=>{"outputSpeech"=>{"type"=>"PlainText", "text"=>""}},
        "directives"=>[],
-       "shouldEndSession"=>true}}.to_json
+       "shouldEndSession"=>"true"}}.to_json
 
     response = described_class.new
     response.spoken_response = "Hello World!"
@@ -44,7 +44,7 @@ RSpec.describe AlexaWebService::Response do
        "card"=>nil,
        "reprompt"=>{"outputSpeech"=>{"type"=>"SSML", "text"=>""}},
        "directives"=>[],
-       "shouldEndSession"=>true}}.to_json
+       "shouldEndSession"=>"true"}}.to_json
 
     response = described_class.new
     response.text_type = "ssml"
@@ -64,7 +64,7 @@ RSpec.describe AlexaWebService::Response do
          "card"=>{"type"=>"Simple", "title"=>"Card Title", "content"=>"Card Content"},
          "reprompt"=>{"outputSpeech"=>{"type"=>"PlainText", "text"=>""}},
          "directives"=>[],
-         "shouldEndSession"=>true}}.to_json
+         "shouldEndSession"=>"true"}}.to_json
 
       response = described_class.new
       card = AlexaWebService::Card.new
@@ -85,7 +85,7 @@ RSpec.describe AlexaWebService::Response do
          "card"=>nil,
          "reprompt"=>{"outputSpeech"=>{"type"=>"PlainText", "text"=>""}},
          "directives"=>[],
-         "shouldEndSession"=>true}}.to_json
+         "shouldEndSession"=>"true"}}.to_json
 
       response = described_class.new
       response.add_attribute("session_attribute", "string")
@@ -120,7 +120,7 @@ RSpec.describe AlexaWebService::Response do
                {"primaryText"=>{"text"=>"Hello World!", "type"=>"RichText"},
                 "secondaryText"=>{"text"=>nil, "type"=>"RichText"},
                 "tertiaryText"=>{"text"=>nil, "type"=>"RichText"}}}}],
-         "shouldEndSession"=>true}}.to_json
+         "shouldEndSession"=>"true"}}.to_json
 
       response = described_class.new
       response.spoken_response = "Hello World!"
@@ -139,7 +139,7 @@ RSpec.describe AlexaWebService::Response do
          "card"=>nil,
          "reprompt"=>{"outputSpeech"=>{"type"=>"PlainText", "text"=>""}},
          "directives"=>[{"type"=>"Hint", "hint"=>{"type"=>"PlainText", "text"=>"This is a hint"}}],
-         "shouldEndSession"=>true}}.to_json
+         "shouldEndSession"=>"true"}}.to_json
 
       response = described_class.new
       response.spoken_response = "Hello World!"
