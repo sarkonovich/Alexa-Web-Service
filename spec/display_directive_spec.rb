@@ -6,25 +6,26 @@ RSpec.configure do |c|
 end
 
 RSpec.describe AlexaWebService::DisplayDirective do
-  subject(:display) { described_class }
+  subject(:display) { described_class.new }
 
   describe '#image_object' do
-    it 'generates an image object with a default size to be used in a display directive' do
+    it 'generates a default image object to be used in a display directive' do
       expected_result = {
-        "contentDescription": 'dislay image',
+        "contentDescription": '',
         "sources": [
           {
-            "url": 'https://your_image_url',
+            "url": '',
             "size": 'X_SMALL'
           }
         ]
       }
 
-      image = described_class.new.image_object('dislay image', 'https://your_image_url')
+      # image = described_class.new.image_object('dislay image', 'https://your_image_url')
+      image = display.image_object
       expect(image).to eq expected_result
     end
 
-    it 'generates an image object with a specified size in a display directive' do
+    it 'generates an image object with a specified size' do
       expected_result = {
         "contentDescription": 'dislay image',
         "sources": [
@@ -35,7 +36,7 @@ RSpec.describe AlexaWebService::DisplayDirective do
         ]
       }
 
-      image = described_class.new.image_object('dislay image', 'https://your_image_url', "X_LARGE")
+      image = display.image_object('dislay image', 'https://your_image_url', "X_LARGE")
       expect(image).to eq expected_result
     end
   end
@@ -140,7 +141,6 @@ RSpec.describe AlexaWebService::DisplayDirective do
         }
       }
 
-      display = described_class.new
       expect(display.directive).to eq expected_result
     end
   end
@@ -163,7 +163,6 @@ RSpec.describe AlexaWebService::DisplayDirective do
            }
          }
        }
-      display = described_class.new
       display.add_text(primary_text: "This is some text")
       expect(display.directive).to eq expected_result
     end
@@ -182,7 +181,6 @@ RSpec.describe AlexaWebService::DisplayDirective do
          :textContent=>{}
          }
        }
-      display = described_class.new
       display.add_image('image object', 'https://image_url')
       expect(display.directive).to eq expected_result
     end
@@ -201,7 +199,6 @@ RSpec.describe AlexaWebService::DisplayDirective do
          :textContent=>{}
          }
        }
-      display = described_class.new
       display.add_background_image('image object', 'https://image_url')
       expect(display.directive).to eq expected_result
     end
@@ -229,7 +226,6 @@ RSpec.describe AlexaWebService::DisplayDirective do
           ]
         }
       } 
-      display = described_class.new
       image = display.image_object('dislay image', 'https://your_image_url')
       text = display.text_object(primary_text: "This is the primary text")
       display.add_list_item(token: 'list item one', image_object: image, text_object: text)

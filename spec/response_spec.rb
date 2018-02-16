@@ -4,6 +4,7 @@ require 'alexa_web_service/hint_directive'
 require 'json'
 
 RSpec.describe AlexaWebService::Response do
+  subject(:response) {described_class.new}
 
   it 'can issue a plain response' do
     expected_response = {"version"=>"1.0",
@@ -15,7 +16,6 @@ RSpec.describe AlexaWebService::Response do
        "directives"=>[],
        "shouldEndSession"=>"true"}}.to_json
 
-    response = described_class.new
     response.spoken_response = "Hello World!"
     expect(response.post).to eq expected_response
   end
@@ -30,7 +30,6 @@ RSpec.describe AlexaWebService::Response do
        "directives"=>[],
        "shouldEndSession"=>false}}.to_json
 
-    response = described_class.new
     response.spoken_response = "Hello World!"
     response.end_session = false
     expect(response.post).to eq expected_response
@@ -46,7 +45,6 @@ RSpec.describe AlexaWebService::Response do
        "directives"=>[],
        "shouldEndSession"=>"true"}}.to_json
 
-    response = described_class.new
     response.text_type = "ssml"
     response.speech_type = 'SSML'
     response.spoken_response = "<speak>Hello World!</speak>"
@@ -63,7 +61,6 @@ RSpec.describe AlexaWebService::Response do
        "directives"=>[],
        "shouldEndSession"=>"true"}}.to_json
 
-    response = described_class.new
     card = AlexaWebService::Card.new
     card.title = "Card Title"
     card.content = "Card Content"
@@ -82,7 +79,6 @@ RSpec.describe AlexaWebService::Response do
        "directives"=>[],
        "shouldEndSession"=>"true"}}.to_json
 
-    response = described_class.new
     response.add_attribute("session_attribute", "string")
     response.spoken_response = "Hello World!"
     expect(response.post).to eq expected_response
@@ -116,7 +112,7 @@ RSpec.describe AlexaWebService::Response do
                 "tertiaryText"=>{"text"=>nil, "type"=>"RichText"}}}}],
          "shouldEndSession"=>"true"}}.to_json
 
-      response = described_class.new
+
       response.spoken_response = "Hello World!"
       display_template = AlexaWebService::DisplayDirective.new(type: "BodyTemplate2", token: "token", title: "Template Title")
       display_template.add_image("template image", "https://your_image.jpg")
@@ -135,7 +131,7 @@ RSpec.describe AlexaWebService::Response do
          "directives"=>[{"type"=>"Hint", "hint"=>{"type"=>"PlainText", "text"=>"This is a hint"}}],
          "shouldEndSession"=>"true"}}.to_json
 
-      response = described_class.new
+
       response.spoken_response = "Hello World!"
       hint = AlexaWebService::HintDirective.new("This is a hint")
       response.add_directive(hint.directive)
