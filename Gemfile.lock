@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    alexa_web_service (1.0.0)
+    alexa_web_service (1.0.1)
 
 GEM
   remote: https://rubygems.org/
