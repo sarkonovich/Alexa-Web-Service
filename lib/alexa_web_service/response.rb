@@ -28,7 +28,11 @@ module AlexaWebService
     end
 
     def add_directive(directive)
-      self.directives << directive if $display_support == true
+      if directive[:type] == "Display.RenderTemplate"|| directive[:type] == "Hint"
+        self.directives << directive if $display_support == true
+      else
+        self.directives << directive
+      end
     end
 
     def add_card(card)
